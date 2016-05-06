@@ -52,7 +52,7 @@ public class ChangeLog extends HttpServlet {
             templateParam.put("historyLst", historyLst);
             templateParam.put("historyNode", "");
             ServletUtil.INSTANCE.renderHtml(request, response, templateParam, "history.ftl.html");
-        } catch (TemplateException ex) {
+        } catch (Exception ex) {
             logger.error(Arrays.toString(ex.getStackTrace()));
             ServletUtil.INSTANCE.renderError(request, response, ex.getMessage());
         }

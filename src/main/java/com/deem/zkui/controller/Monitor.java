@@ -45,15 +45,25 @@ public class Monitor extends HttpServlet {
         try {
             Properties globalProps = (Properties) this.getServletContext().getAttribute("globalProps");
             String zkServer = globalProps.getProperty("zkServer");
-            String[] zkServerLst = zkServer.split(",");
 
             Map<String, Object> templateParam = new HashMap<>();
             StringBuffer stats = new StringBuffer();
-            for (String zkObj : zkServerLst) {
-                stats.append("<br/><hr/><br/>").append("Server: ").append(zkObj).append("<br/><hr/><br/>");
+            for (String zkObj : zkServer.split(",")) {
+                stats.append("<hr/><h4>").append("Server: ").append(zkObj).append("</h4><hr/>");
                 String[] monitorZKServer = zkObj.split(":");
-                stats.append(CmdUtil.INSTANCE.executeCmd("stat", monitorZKServer[0], monitorZKServer[1]));
-                stats.append(CmdUtil.INSTANCE.executeCmd("envi", monitorZKServer[0], monitorZKServer[1]));
+
+                try {
+                    stats.append("<strong>Server Summary:</strong><br/>");
+                    stats.append(CmdUtil.INSTANCE.executeCmd("srvr", monitorZKServer[0], monitorZKServer[1]));
+                    stats.append("<br/><strong>Connection Summary:</strong><br/>");
+                    stats.append(CmdUtil.INSTANCE.executeCmd("cons", monitorZKServer[0], monitorZKServer[1]));
+                    stats.append("<strong>Watch Summary:</strong><br/>");
+                    stats.append(CmdUtil.INSTANCE.executeCmd("wchs", monitorZKServer[0], monitorZKServer[1]));
+                } catch (IOException ex) {
+                    stats.append("<p style=\"color:red;\">");
+                    stats.append("Server Response Error: ").append(ex.getMessage());
+                    stats.append("</p><br/>");
+                }
             }
             templateParam.put("stats", stats);
             ServletUtil.INSTANCE.renderHtml(request, response, templateParam, "monitor.ftl.html");
