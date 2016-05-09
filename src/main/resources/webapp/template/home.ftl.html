@@ -227,37 +227,16 @@
                                         <span class="input-group-addon">Upload File</span>
                                         <div class="fileinput fileinput-new" data-provides="fileinput">
                                             <span class="btn btn-default btn-file">
-                                                <input class="form-control" type="file" name="scmFile" size="30">
+                                                <input class="form-control" type="file" name="importFile" size="30">
                                             </span>
                                         </div>
-                                    </div>
-
-
-
-                                    <br/>
-                                    <h4 class="text-center text-primary">OR</h4>
-                                    <br/>
-
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-addon">File Path</span>
-                                        <input type="hidden" id="scmServer" name="scmServer" value="${scmRepo}"/>
-                                        <input type="text" id="scmFilePath"  name="scmFilePath" class="form-control" placeholder="${scmRepoPath}">
-                                    </div>
-                                    <br/>
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-addon">Revision</span>
-                                        <input type="text" id="scmFileRevision"  name="scmFileRevision" class="form-control" placeholder="head">
-                                    </div>
-                                    <br/>
-                                    <div class="text-center">
-                                        <a href="#" id="importFileView" target="_blank">View</a>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="modal-footer">
                                 <div class="checkbox text-left">
-                                    <label><input type="checkbox" name="scmOverwrite" value="true"> Overwrite Existing Properties</label>
+                                    <label><input type="checkbox" name="forceImport" value="true"> Overwrite Existing Properties</label>
                                 </div>
 
                                 <div>

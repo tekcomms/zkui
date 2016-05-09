@@ -71,9 +71,19 @@ public enum ServletUtil {
     }
 
     public void renderError(HttpServletRequest request, HttpServletResponse response, String error) {
+        Map<String, Object> templateParam = new HashMap<>();
+        HttpSession session = request.getSession();
+        if (session != null) {
+            if (session.getAttribute("flashMsg") != null) {
+                templateParam.put("flashMsg", session.getAttribute("flashMsg"));
+                session.setAttribute("flashMsg", null);
+            }
+            templateParam.put("authName", session.getAttribute("authName"));
+            templateParam.put("authRole", session.getAttribute("authRole"));
+        }
+
         try {
             logger.error("Error :" + error);
-            Map<String, Object> templateParam = new HashMap<>();
             response.setContentType("text/html");
             Template template = null;
             Configuration config = new Configuration();

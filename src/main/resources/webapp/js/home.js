@@ -17,14 +17,6 @@
  */
 $(document).ready(function() {
 
-    $("#importFileView").click(function() {
-        var scmServer = $("#scmServer").val();
-        var scmFilePath = $("#scmFilePath").val();
-        var scmFileRevision = $("#scmFileRevision").val();
-        $("#importFileView").attr('href', scmServer + scmFileRevision + "@" + scmFilePath);
-
-    });
-
     //Class based selector 
     $(".href-select").click(function() {
         var propName = $(this).text();

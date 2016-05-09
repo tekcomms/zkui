@@ -58,17 +58,15 @@ public class Import extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("Importing Action!");
+        BufferedReader br = null;
+
         try {
             Properties globalProps = (Properties) this.getServletContext().getAttribute("globalProps");
             Dao dao = new Dao(globalProps);
             String zkServer = globalProps.getProperty("zkServer");
-            String[] zkServerLst = zkServer.split(",");
 
             StringBuilder sbFile = new StringBuilder();
-            String scmOverwrite = "false";
-            String scmServer = "";
-            String scmFilePath = "";
-            String scmFileRevision = "";
+            String forceImport = "false";
             String uploadFileName = "";
 
             DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -80,19 +78,9 @@ public class Import extends HttpServlet {
             while (iter.hasNext()) {
                 FileItem item = (FileItem) iter.next();
                 if (item.isFormField()) {
-                    if (item.getFieldName().equals("scmOverwrite")) {
-                        scmOverwrite = item.getString();
+                    if (item.getFieldName().equals("forceImport")) {
+                        forceImport = item.getString();
                     }
-                    if (item.getFieldName().equals("scmServer")) {
-                        scmServer = item.getString();
-                    }
-                    if (item.getFieldName().equals("scmFilePath")) {
-                        scmFilePath = item.getString();
-                    }
-                    if (item.getFieldName().equals("scmFileRevision")) {
-                        scmFileRevision = item.getString();
-                    }
-
                 } else {
                     uploadFileName = item.getName();
                     sbFile.append(item.getString());
@@ -101,22 +89,12 @@ public class Import extends HttpServlet {
 
             InputStream inpStream;
 
-            if (sbFile.toString().length() == 0) {
-                uploadFileName = scmServer + scmFileRevision + "@" + scmFilePath;
-                logger.debug("P4 file Processing " + uploadFileName);
-                dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Importing P4 File: " + uploadFileName + "<br/>" + "Overwrite: " + scmOverwrite);
-                URL url = new URL(uploadFileName);
-                URLConnection conn = url.openConnection();
-                inpStream = conn.getInputStream();
-
-            } else {
-                logger.debug("Upload file Processing " + uploadFileName);
-                dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Uploading File: " + uploadFileName + "<br/>" + "Overwrite: " + scmOverwrite);
-                inpStream = new ByteArrayInputStream(sbFile.toString().getBytes());
-            }
+            logger.debug("Upload file Processing " + uploadFileName);
+            dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Uploading File: " + uploadFileName + "<br/>" + "Overwrite: " + forceImport);
+            inpStream = new ByteArrayInputStream(sbFile.toString().getBytes());
 
             // open the stream and put it into BufferedReader
-            BufferedReader br = new BufferedReader(new InputStreamReader(inpStream));
+            br = new BufferedReader(new InputStreamReader(inpStream));
             String inputLine;
             List<String> importFile = new ArrayList<>();
             Integer lineCnt = 0;
@@ -134,9 +112,8 @@ public class Import extends HttpServlet {
 
                 importFile.add(inputLine);
             }
-            br.close();
 
-            ZooKeeperUtil.INSTANCE.importData(importFile, Boolean.valueOf(scmOverwrite), ServletUtil.INSTANCE.getZookeeper(request, response, zkServerLst[0], globalProps));
+            ZooKeeperUtil.INSTANCE.importData(importFile, Boolean.valueOf(forceImport), ServletUtil.INSTANCE.getZookeeper(request, response, zkServer, globalProps));
             for (String line : importFile) {
                 if (line.startsWith("-")) {
                     dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "File: " + uploadFileName + ", Deleting Entry: " + line);
@@ -149,6 +126,14 @@ public class Import extends HttpServlet {
         } catch (FileUploadException | IOException | InterruptedException | KeeperException ex) {
             logger.error(Arrays.toString(ex.getStackTrace()));
             ServletUtil.INSTANCE.renderError(request, response, ex.getMessage());
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage());
+                }
+            }
         }
     }
 }
