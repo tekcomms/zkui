@@ -4,7 +4,7 @@ A UI dashboard that allows CRUD operations on Zookeeper.
 
 Requirements
 ====================
-Requires Java 7 to run.
+Requires Java 8 to run.
 
 Setup
 ====================
