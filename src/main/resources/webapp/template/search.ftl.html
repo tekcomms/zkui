@@ -15,7 +15,8 @@
 # limitations under the License.
 #
 -->
-<#import "layouts/main-layout.ftl.html" as main> 
+<#import "common/macros.ftl.html" as macros>
+<#import "layouts/main-layout.ftl.html" as main>
 <@main.page>
 <div class="container">
     <div class="row-fluid">
@@ -42,7 +43,7 @@
                             <a href="/home?zkPath=${leaf.path}">${leaf.path}</a> 
                         </td>
                         <td>${leaf.name}</td>
-                        <td>${leaf.strValue}</td>
+                        <td><@macros.maskPassword name="${leaf.name}" value="${leaf.strValue}"/></td>
                     </tr>
                     </#list>
                 </tbody>

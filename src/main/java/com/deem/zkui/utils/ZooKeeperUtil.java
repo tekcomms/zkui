@@ -51,7 +51,7 @@ public enum ZooKeeperUtil {
     public final static String ZK_HOSTS = "/appconfig/hosts";
     public final static String ROLE_USER = "USER";
     public final static String ROLE_ADMIN = "ADMIN";
-    public final static String SOPA_PIPA = "SOPA/PIPA BLACKLISTED VALUE";
+    public final static String SOPA_PIPA = "********";
 
     private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ZooKeeperUtil.class);
 

@@ -1,0 +1,10 @@
+<!-- Mask a property value if the property name contains the keyword password or other similar abbreviations -->
+<#macro maskPassword name value>
+    <#if value??>
+        <#if name?matches(".*(password|passwd|pwd).*", "i")>
+            ********
+        <#else/>
+            ${value?html}
+        </#if>
+    </#if>
+</#macro>

@@ -90,7 +90,7 @@ public class Import extends HttpServlet {
             InputStream inpStream;
 
             logger.debug("Upload file Processing " + uploadFileName);
-            dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Uploading File: " + uploadFileName + "<br/>" + "Overwrite: " + forceImport);
+            dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Import File: " + uploadFileName + "<br/>" + "Overwrite: " + forceImport);
             inpStream = new ByteArrayInputStream(sbFile.toString().getBytes());
 
             // open the stream and put it into BufferedReader
@@ -114,12 +114,24 @@ public class Import extends HttpServlet {
             }
 
             ZooKeeperUtil.INSTANCE.importData(importFile, Boolean.valueOf(forceImport), ServletUtil.INSTANCE.getZookeeper(request, response, zkServer, globalProps));
+            String summaryPrefix = "Import File: " + uploadFileName + ", ";
+            StringBuilder summary = new StringBuilder(summaryPrefix);
+
             for (String line : importFile) {
-                if (line.startsWith("-")) {
-                    dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "File: " + uploadFileName + ", Deleting Entry: " + line);
-                } else {
-                    dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "File: " + uploadFileName + ", Adding Entry: " + line);
+                String[] tokens = line.split("=");
+                String nodePath = tokens[0];
+                String propName = tokens[1];
+                String propValue = (tokens.length == 3) ? tokens[2] : null;
+
+                summary.setLength(summaryPrefix.length());
+                summary.append((line.startsWith("-")) ? "Delete" : "Add").append(" Entry: ");
+                summary.append(nodePath).append(",");
+                summary.append(propName).append("=");
+                if (propValue != null) {
+                    summary.append((!ZooKeeperUtil.INSTANCE.checkIfPwdField(propName)) ? propValue : ZooKeeperUtil.SOPA_PIPA);
                 }
+
+                dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), summary.toString());
             }
             request.getSession().setAttribute("flashMsg", "Import Completed!");
             response.sendRedirect("/home");
