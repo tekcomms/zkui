@@ -27,13 +27,20 @@ $(document).ready(function() {
 
         $("#savePropertyBtn").hide();
         $("#updatePropertyBtn").show();
+        var title = "Update Property";
+        $(".modal-header #myModalLabel").text(title);
     });
 
     //Id based selector
     $("#addPropertyBtn").click(function() {
         $("#newProperty").attr('readonly', false);
+        $("#newProperty").val('');
+        $("#newValue").val('');
+
         $("#updatePropertyBtn").hide();
         $("#savePropertyBtn").show();
+        var title = "Add Property";
+        $(".modal-header #myModalLabel").text(title);
     });
 
 

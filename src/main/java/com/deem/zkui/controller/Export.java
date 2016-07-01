@@ -17,6 +17,7 @@
  */
 package com.deem.zkui.controller;
 
+import com.deem.zkui.dao.Dao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -46,6 +47,7 @@ public class Export extends HttpServlet {
         logger.debug("Export Get Action!");
         try {
             Properties globalProps = (Properties) this.getServletContext().getAttribute("globalProps");
+            Dao dao = new Dao(globalProps);
             String zkServer = globalProps.getProperty("zkServer");
 
             String authRole = (String) request.getSession().getAttribute("authRole");
@@ -53,11 +55,13 @@ public class Export extends HttpServlet {
                 authRole = ZooKeeperUtil.ROLE_USER;
             }
             String zkPath = request.getParameter("zkPath");
+            dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Export: " + zkPath + "<br/>");
             StringBuilder output = new StringBuilder();
-            output.append("#App Config Dashboard (ACD) dump created on :").append(new Date()).append("\n");
+            output.append("#Export for path: ").append(zkPath).append(" created on: ").append(new Date()).append("\n");
             Set<LeafBean> leaves = ZooKeeperUtil.INSTANCE.exportTree(zkPath, ServletUtil.INSTANCE.getZookeeper(request, response, zkServer, globalProps), authRole);
             for (LeafBean leaf : leaves) {
-                output.append(leaf.getPath()).append('=').append(leaf.getName()).append('=').append(ServletUtil.INSTANCE.externalizeNodeValue(leaf.getValue())).append('\n');
+                String value = !ZooKeeperUtil.INSTANCE.checkIfPwdField(leaf.getName()) ? ServletUtil.INSTANCE.externalizeNodeValue(leaf.getValue()) : ZooKeeperUtil.SOPA_PIPA;
+                output.append(leaf.getPath()).append('=').append(leaf.getName()).append('=').append(value).append('\n');
             }// for all leaves
             response.setContentType("text/plain");
             try (PrintWriter out = response.getWriter()) {

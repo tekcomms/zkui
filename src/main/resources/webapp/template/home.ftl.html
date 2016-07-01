@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 -->
+<#import "common/macros.ftl.html" as macros>
 <#import "layouts/main-layout.ftl.html" as main> 
 <@main.page>
 
@@ -78,25 +79,28 @@
                             </td>
                             <td>
                                 <#if authRole?? && authRole == 'ADMIN' >
-                                <#if leaf.value??>
-                                <a href="#" data-toggle="modal" class="href-select" data-target="#addPropertyModal" itemprop="${leaf.strValue?html}" >${leaf.name}</a> 
+                                    <#if leaf.value??>
+                                        <#if leaf.name?matches(".*(password|passwd|pwd).*", "i")>
+                                            <a href="#" data-toggle="modal" class="href-select" data-target="#addUpdPropertyModal" itemprop="********">${leaf.name}</a>
+                                        <#else/>
+                                            <a href="#" data-toggle="modal" class="href-select" data-target="#addUpdPropertyModal" itemprop="${leaf.strValue?html}">${leaf.name}</a>
+                                        </#if>
+                                    <#else>
+                                        <a href="#" data-toggle="modal" class="href-select" data-target="#addUpdPropertyModal" itemprop="" >${leaf.name}</a>
+                                    </#if>
                                 <#else>
-                                <a href="#" data-toggle="modal" class="href-select" data-target="#addPropertyModal" itemprop="" >${leaf.name}</a> 
-                                </#if>
-                                <#else>
-                                ${leaf.name}
+                                    ${leaf.name}
                                 </#if>
                             </td>
                             <#if navigate?? && navigate == 'true'>
-                            <td><a href="/home?zkPath=${leaf.strValue}">${leaf.strValue}</a></td>
+                                <td><a href="/home?zkPath=${leaf.strValue}">${leaf.strValue}</a></td>
                             <#else>
-                            <td>
-                                <#if leaf.value??>
-                                ${leaf.strValue?html}
-                                </#if>
-                            </td>
+                                <td>
+                                    <#if leaf.value??>
+                                        <@macros.maskPassword name="${leaf.name}" value="${leaf.strValue}"/>
+                                    </#if>
+                                </td>
                             </#if>
-
                         </tr>
                         </#list>
                     </tbody>
@@ -157,13 +161,13 @@
                     </div>
                 </div> 
 
-                <!-- Add Property Modal -->
-                <div class="modal fade" id="addPropertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <!-- Add or Update Property Modal -->
+                <div class="modal fade" id="addUpdPropertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">Add Property</h4>
+                                <h4 class="modal-title" id="myModalLabel">&nbsp;</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="input-group input-group-lg">
