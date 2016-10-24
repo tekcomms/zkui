@@ -45,7 +45,7 @@ public class Logout extends HttpServlet {
             ZooKeeper zk = ServletUtil.INSTANCE.getZookeeper(request, response, zkServer,globalProps);
             request.getSession().invalidate();
             zk.close();
-            response.sendRedirect("/login");
+            response.sendRedirect("login");
         } catch (InterruptedException ex) {
             logger.error(Arrays.toString(ex.getStackTrace()));
             ServletUtil.INSTANCE.renderError(request, response, ex.getMessage());

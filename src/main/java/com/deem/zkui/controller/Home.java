@@ -134,7 +134,7 @@ public class Home extends HttpServlet {
                         request.getSession().setAttribute("flashMsg", "Node created!");
                         dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Add node: " + currentPath + newNode);
                     }
-                    response.sendRedirect("/home?zkPath=" + displayPath);
+                    response.sendRedirect("home?zkPath=" + displayPath);
                     break;
                 case "Save Property":
                     if (!newProperty.equals("") && !currentPath.equals("") && authRole.equals(ZooKeeperUtil.ROLE_ADMIN)) {
@@ -146,7 +146,7 @@ public class Home extends HttpServlet {
                         }
                         dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Add Property: " + currentPath + "," + newProperty + "=" + newValue);
                     }
-                    response.sendRedirect("/home?zkPath=" + displayPath);
+                    response.sendRedirect("home?zkPath=" + displayPath);
                     break;
                 case "Update Property":
                     if (!newProperty.equals("") && !currentPath.equals("") && authRole.equals(ZooKeeperUtil.ROLE_ADMIN)) {
@@ -158,7 +158,7 @@ public class Home extends HttpServlet {
                         }
                         dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), "Update Property: " + currentPath + "," + newProperty + "=" + newValue);
                     }
-                    response.sendRedirect("/home?zkPath=" + displayPath);
+                    response.sendRedirect("home?zkPath=" + displayPath);
                     break;
                 case "Search":
                     Set<LeafBean> searchResult = ZooKeeperUtil.INSTANCE.searchTree(searchStr, ServletUtil.INSTANCE.getZookeeper(request, response, zkServer, globalProps), authRole);
@@ -186,10 +186,10 @@ public class Home extends HttpServlet {
                         }
 
                     }
-                    response.sendRedirect("/home?zkPath=" + displayPath);
+                    response.sendRedirect("home?zkPath=" + displayPath);
                     break;
                 default:
-                    response.sendRedirect("/home");
+                    response.sendRedirect("home");
             }
 
         } catch (InterruptedException | TemplateException | KeeperException ex) {

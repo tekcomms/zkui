@@ -20,7 +20,7 @@
 <@main.page>
 
 <div class="container">
-    <form method="post" action="/home">
+    <form method="post" action="home">
         <!--Bread crumb-->
         <div class="row-fluid">
             <div class="col-md-12">
@@ -39,7 +39,7 @@
                     <#assign breadCrumbPath = breadCrumbPath + "/" +  breadCrumb> 
                     </#if>
 
-                    <li><a href="/home?zkPath=${breadCrumbPath}" class="breadcrumb-select">${breadCrumb}</a></li>
+                    <li><a href="home?zkPath=${breadCrumbPath}" class="breadcrumb-select">${breadCrumb}</a></li>
                     </#list>
                     <#else>
                     <li>/</li>
@@ -52,12 +52,12 @@
         <div class="row-fluid">
             <div class="col-md-3 well pre-scrollable scroll-pane" >
                 <span class="glyphicon glyphicon-folder-close"></span>
-                <a href="/home?zkPath=${parentPath}"><..></a>
+                <a href="home?zkPath=${parentPath}"><..></a>
                 <br/>
                 <#list nodeLst as node>
                 <input type="checkbox" name="nodeChkGroup" value="${currentPath}${node}"/>
                 <span class="glyphicon glyphicon-folder-close"></span>
-                <a href="/home?zkPath=${currentPath}${node}">${node}</a>
+                <a href="home?zkPath=${currentPath}${node}">${node}</a>
                 <br/>
                 </#list>
 

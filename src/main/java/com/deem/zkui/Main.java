@@ -64,7 +64,7 @@ public class Main {
         Server server = new Server();
 
         WebAppContext servletContextHandler = new WebAppContext();
-        servletContextHandler.setContextPath("/");
+        servletContextHandler.setContextPath("/zkui");
         servletContextHandler.setResourceBase("src/main/resources/" + webFolder);
         ClassList clist = ClassList.setServerDefault(server);
         clist.addBefore(JettyWebXmlConfiguration.class.getName(), AnnotationConfiguration.class.getName());

@@ -77,7 +77,7 @@ public class ChangeLog extends HttpServlet {
                 ServletUtil.INSTANCE.renderHtml(request, response, templateParam, "history.ftl.html");
 
             } else {
-                response.sendRedirect("/history");
+                response.sendRedirect("history");
             }
         } catch (TemplateException ex) {
             logger.error(Arrays.toString(ex.getStackTrace()));
