@@ -28,7 +28,7 @@
             <ul class="nav navbar-nav">
                 <#if displayPath??>
                 <!-- disabling Hosts menu item for REST API which is not used at this time. -->
-                <!-- <li><a href="/home?zkPath=/appconfig/hosts&navigate=true">Hosts</a></li> -->
+                <!-- <li><a href="home?zkPath=/appconfig/hosts&navigate=true">Hosts</a></li> -->
 
                 <#if authRole?? && authRole == 'ADMIN' >
                 <li><a href="#" data-toggle="modal" data-target="#addNodeModal">Add Node</a></li>
