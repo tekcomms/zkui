@@ -134,7 +134,7 @@ public class Import extends HttpServlet {
                 dao.insertHistory((String) request.getSession().getAttribute("authName"), request.getRemoteAddr(), summary.toString());
             }
             request.getSession().setAttribute("flashMsg", "Import Completed!");
-            response.sendRedirect("/home");
+            response.sendRedirect("home");
         } catch (FileUploadException | IOException | InterruptedException | KeeperException ex) {
             logger.error(Arrays.toString(ex.getStackTrace()));
             ServletUtil.INSTANCE.renderError(request, response, ex.getMessage());

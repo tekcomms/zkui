@@ -40,7 +40,7 @@
                     <#list searchResult as leaf>
                     <tr>
                         <td>
-                            <a href="/home?zkPath=${leaf.path}">${leaf.path}</a> 
+                            <a href="home?zkPath=${leaf.path}">${leaf.path}</a>
                         </td>
                         <td>${leaf.name}</td>
                         <td><@macros.maskPassword name="${leaf.name}" value="${leaf.strValue}"/></td>

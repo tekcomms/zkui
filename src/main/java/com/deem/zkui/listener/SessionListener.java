@@ -39,7 +39,9 @@ public class SessionListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent event) {
         try {
             ZooKeeper zk = (ZooKeeper) event.getSession().getAttribute("zk");
-            zk.close();
+            if (zk != null) {
+                zk.close();
+            }
             logger.trace("Session destroyed");
         } catch (InterruptedException ex) {
             logger.error(Arrays.toString(ex.getStackTrace()));

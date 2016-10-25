@@ -108,7 +108,7 @@ public class Login extends HttpServlet {
                 logger.info("Login successful: " + username);
                 session.setAttribute("authName", username);
                 session.setAttribute("authRole", role);
-                response.sendRedirect("/home");
+                response.sendRedirect("home");
             } else {
                 session.setAttribute("flashMsg", "Invalid Login");
                 ServletUtil.INSTANCE.renderHtml(request, response, templateParam, "login.ftl.html");
